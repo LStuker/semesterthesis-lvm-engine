@@ -1,0 +1,4 @@
+- :method: free
+  :type_hint: Integer
+  :column: pv_free
+  :description: Total amount of unallocated space in current units.

@@ -1,0 +1,44 @@
+\chapter{Einleitung}
+\label{cha:Einleitung}
+
+\section{Motivation}
+
+Die IT-Infrastruktur wird stetig komplexer. Gleichzeitig haben viele Unternehmungen vermehrt das Bedürfnis, wiederkehrende Arbeiten an den IT-Betrieb zu übergeben. Damit technisch komplexe Aufgaben nicht von Fachspezialisten ausgeführt werden müssen, benötigt es geeignete Werkzeuge, die dem Betriebspersonal helfen, solche Aufgaben schnell und korrekt auszuführen.
+
+Im Storage Umfeld fehlen meist geeignete Werkzeuge, die es dem Betrieb ermöglichen, zentral für den einzelnen Server oder Cluster, das Volume zu verwalten. Ein solches Tool wird Gegenstand dieser Arbeit sein. Für einfachere IT-Strukturen wird das Volume individuell serverseitig verwaltet, hingegen bei komplexen Strukturen wäre ein solches Werkzeug wie hier beschrieben von grossem Vorteil. Zu berücksichtigen ist auch, dass die Komplexität beim Verwalten von Volume mit der Anzahl zugeordneten Disks und Funktionen wie Mirroring, Snapshot und Striping ansteigt. Es ist heute nicht selten, dass einem Server 30 und mehr Disk zugeordnet werden. Steht dem Unternehmen und somit dem IT-Betrieb kein geeignetes Werkzeug zur Verfügung, müssen weiterhin die wiederkehrende Pflege am Volume von Fachspezialisten "'manuell"' ausgeführt werden. IT-Projekte, neue Technologien und Architekturen können nur durch qualifizierte Fachspezialisten nach vorne gebracht werden. Zusätzliche betriebliche Aufgaben verringen die meist ohnehin knappen Kapazitäten von Fachspezialisten, wodurch die effiziente Umsetzung von Projekten leicht verzögert werden und damit die Business-Verantwortlichen hart treffen könnte.
+
+Es soll deshalb ein Konzept und Prototyp für ein Werkzeug erarbeitet werden, welches den Anwendern hilft, aus den verschiedenen Disks ein Volume zu erstellen, Volume zu spiegeln, zu vergrössern oder einen Snapshot zu generieren, ohne über ein fundiertes Fachwissen verfügen zu müssen.
+
+Das Werkzeug soll primär für die Verwaltung von Volumes auf Linux Systemen entwickelt werden. Auf Linux wird meist der Linux Logical Volume Manager (LVM) eingesetzt.
+
+Eine mögliche Erweiterung auf das von Oracle (Sun) entwickelte Dateisystem "ZFS" und somit die Unterstützung von Solaris Systemen soll später möglich sein. ZFS fasst die Technologien aus Volume Manager, RAID Systemen und Dateisystem zusammen und macht die Verwaltung mit wenigen Befehlen einfacher.
+
+Die Zuordnung von Speicher in der Storagebox und das Verknüpfung des Servers mit dem Storagebox Controller über ein SAN, soll nicht vom geplanten Werkzeug abgedeckt werden. Das Werkzeug soll keine automatische Optimierung am Volume vornehmen, z.B. Zuordnung von mehr Speicher während des Betriebs. Die Umsetzung eines verkaufsfertigen Produktes ist nicht Teil dieser Arbeit. Dafür wären zusätzliche Funktionen wie Mehrsprachigkeit, Anpassungsfähigkeit an die betrieblichen- und technischen Bedürfnisse des Unternehmens und die Umsetzung von erweiterten Sicherheitsstandards notwendig. Mit Hilfe eines Prototyps soll die Machbarkeit des Werkzeugs untersucht werden.
+
+\section{Ziel der Arbeit}
+
+Es soll ein Konzept für eine Server Client Engine für den Volume Manager LVM erstellt werden. Für das Konzept sollen die Eigenschaften von LVM untersucht werden. Anhand der gewonnenen Erkenntnissen soll ein Lösungsentwurf ausgearbeitet und mit der Entwicklung eines Prototyps soll die Machbarkeit des Konzept festgestellt werden.
+
+Zusätzlich soll der Student in diesem Projekt Erfahrung und Wissen mit der Grundlagentechnik erlangen.
+
+\section{Aufgabenstellung}
+\begin{itemize}
+\item Einarbeiten in LVM
+\item LVM Eigenschaften aufzeigen
+\item Anforderungsanalyse die auch zwischen zwingenden und nicht zwingenden Anforderungen unterscheidet
+\item Konzept für die Client basierten Volume Manager Engine erarbeiten
+\item Prototyp der VM Engine für LVM entwickeln
+\item Die Ergebnisse dokumentieren
+\end{itemize}
+
+\section{Erwartete Resultate}
+\begin{itemize}
+\item Dokumentation LVM
+\item Anforderungsanalyse
+\item Konzept LVM Engine
+\item Prototyp LVM Engine
+\end{itemize}
+
+\section{Der Aufbau der Arbeit}
+Die Arbeit ist in mehrere Kapitel gegliedert, die im Folgenden kurz vorgestellt werden. Das Kapitel  \myref{cha:VM}  behandelt das Thema LVM und bietet einen Einstieg in die Eigenschaften des Volume Managers. Zudem wird gezeigt, welche Architekturen mit dem Volume Manager realisiert werden können. In diesem Kapitel werden ebenfalls die wichtigsten Befehle zum Anlegen und Manipulieren von LVM Objekten dokumentiert. Im Kapitel \myref{cha:Analyse}  werden die Anforderungen seitens der Anwender für eine zentrale Volume Manager Anwendung behandelt. Zusätzlich wird das Marktumfeld einer solchen Lösung analysiert und besprochen. Das Konzept der Applikation wird im Kapitel \myref{cha:Konzept} erläutert. Das Kapitel \myref{cha:Prototyp} zeigt die Ergebnisse und Umsetzung des Prototyps, welche den praktischen Teil der Arbeit umfasst.
+

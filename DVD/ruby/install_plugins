@@ -1,0 +1,18 @@
+wsls:vmEvolus lucienstuker$ script/plugin install git://github.com/pilu/web-app-theme.git
+Initialized empty Git repository in /Users/lucienstuker/Documents/hsz-t/Jahr3/Semester/Workspace/vmEvolus/vendor/plugins/web-app-theme/.git/
+remote: Counting objects: 102, done.
+remote: Compressing objects: 100% (80/80), done.
+remote: Total 102 (delta 20), reused 70 (delta 4)
+Receiving objects: 100% (102/102), 64.40 KiB, done.
+Resolving deltas: 100% (20/20), done.
+From git://github.com/pilu/web-app-theme
+ * branch            HEAD       -> FETCH_HEAD
+wsls:vmEvolus lucienstuker$  script/plugin install git://github.com/mislav/will_paginate.git
+Initialized empty Git repository in /Users/lucienstuker/Documents/hsz-t/Jahr3/Semester/Workspace/vmEvolus/vendor/plugins/will_paginate/.git/
+remote: Counting objects: 58, done.
+remote: Compressing objects: 100% (55/55), done.
+remote: Total 58 (delta 2), reused 20 (delta 0)
+Unpacking objects: 100% (58/58), done.
+From git://github.com/mislav/will_paginate
+ * branch            HEAD       -> FETCH_HEAD
+wsls:vmEvolus lucienstuker$ 

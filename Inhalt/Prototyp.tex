@@ -1,0 +1,78 @@
+\chapter{Prototyp LVM Engine}
+\label{cha:Prototyp}
+
+
+
+\section{Ausgangslage}
+Mit dem Prototyp soll die Machbarkeit der Entwicklung einer LVM Engine aufgezeigt werden.
+Die LVM Engine ist der Teil der Anwendung, welche auf dem Clients die LVM-Befehle ausführt, um LVM Objekte einzulesen und anzulegen. Die LVM Engine baut auf dem Projekt ruby-lvm-wrapper auf. Dadurch sind die Funktionen für das Einlesen der LVM Objekte bereits umgesetzt.
+
+\section{SSH Client}
+Im ruby-lvm-wrapper wurden die LVM an die Funktion cmd des Module External übergeben. Für das Ausführen eines Befehles auf einem entfernten Rechner habe ich die Funktion cmd mit der Funktion Parameter Server ergänzt. Ursprünglich wollte ich für SSH die Ruby Libary NET::SSH verwenden. Für die Sicherheit auf dem Client sollten die LVM Befehle mittels SUDO auf dem System ausgeführt werden. Für das Ausführen von SUDO ist eine Shell notwendig. Die Libary hat diese jedoch nicht unterstützt, weshalb ich die LVM Befehle an den SSH Client des Systemes als Parameter übergeben habe. 
+
+Mit der Option \textbf{-q}  (Quite Mode) wird verhindert, dass Login Banner Informationen des Clients nicht ausgegeben werden. Die Unterdrückung der Ausgabe hat den Vorteil, dass keine störende Zeichen oder Zeilen für das Parsen ausgegeben werden. Für SUDO wird mit der Option \textbf{-t} in doppelter Ausführung eine TTY alloziert. Der Loginname wird mit der Option \textbf{-l} (Login) und dem Benutzernamen definiert. Mit der Option \textbf{-i} und dem Pfad zum SSH Private-Key des Benutzers kann die PublicPrivate Key Authentifizierung von SSH verwendet werden.
+
+Der Auszug der Klasse External, welche im Listing \myref{lst:KlassExternal} abgebildet ist, zeigt den ganzen SSH Befehl.
+
+Für alle zu verwendeten Clients wird der gleiche SSH-Key und der gleiche SSH-Benutzer verwendet. Somit kann dieser vom System klar als Application-Benutzer identifiziert werden und allenfalls automatisch über ein Konfiguration Management Tool angelegt werden. Einfachheitshalber kann man den SSH Benutzer und den Pfad zu dessen Private Key über eine AppConfig File im YAML Format für die Engine konfigurieren bzw. bereitstellen.
+
+\lstset{language=Ruby, basicstyle=\footnotesize, showstringspaces=false, tabsize=2}
+\lstinputlisting[label=lst:KlassExternal,caption=LVM-Engine: Klass \Code{External}]{DVD/ruby/external.rb}
+
+Zusätzlich zu den SSH Anpassungen wurden in der Klasse der Code für die pOpen4 Stream-Verarbeitung vereinfacht. 
+
+\section{Physical Volume erstellen}
+Für das Erstellen von Physical Volumes habe ich einen Wrapper für den LVM-Befehl pvcreate als Module PVcreate gebaut. Das Module PVcreate stellt die Funktion pv\_create zur Verfügung. Die Funktion pv\_create verlangt eine Device Objekt als Parameter. Für das Device-Objekt wird geprüft, ob dessen Attribute "Partition" und "Physical Volume Label" gesetzt sind. Ist dies nicht der Fall, wird anhand des Device Namen ein Physical Volume angelegt.
+
+\lstset{language=Ruby, basicstyle=\footnotesize, showstringspaces=false, tabsize=2}
+\lstinputlisting[label=lst:ModulePVCreate,caption=LVM-Engine: Module \Code{PVCreate}]{DVD/ruby/pvcreate.rb}
+
+\section{VolumeGroup erstellen}
+Das Module VGCreate bietet die beiden Funktionen vg\_create und vg\_create\_cluster an. Beide Funktionen erstellen anhand eines oder mehrerer Physical Volume Objekte eine Volume Group mit dem Unterschied, dass bei der Funktion  vg\_create\_cluster ein Clustered Volume Group erstellt wird. Das Physical Volume Object wird in einem Array zusammen mit dem gewünschten Volume Group Namen an die Funktionen übergeben. Die Funktionen prüfen alle übergebenen Physical Volume Objekte, ob diese bereits einer Volume Group zu geordnet sind. Ist diese nicht der Fall, wird die Volume Group mit dem gewünschten Namen erstellt. 
+
+\lstset{language=Ruby, basicstyle=\footnotesize, showstringspaces=false, tabsize=2}
+\lstinputlisting[label=lst:ModuleVGCreate,caption=LVM-Engine: Module \Code{VGCreate}]{DVD/ruby/vgcreate.rb}
+
+\section{Logical Volume erstellen}
+Für das Erstellen eines Logical Volumes wurde ein Wrapper-Modul für den LVM-Befehl LVcreate erstellt. Das Module LVcreate bietet die Möglichkeit, gespiegelte und nicht-gespiegelte Logical Volumes auf einer Volume Group anzulegen. Dabei kann die Grösse jeweils in Extents oder in Bytes definiert werden.
+Den dafür benötigten vier Funktionen werden der Logical Volume Name, das Volume Group Objekt und die Grösse übergeben. Die Funktion prüft, ob für das Volume Objekt genügend Speicherplatz vorhanden ist, ein Logical Volume mit der gewünschten Grösse anzulegen.
+
+\lstset{language=Ruby, basicstyle=\footnotesize, showstringspaces=false, tabsize=2}
+\lstinputlisting[label=lst:ModuleLVCreate,caption=LVM-Engine: Module \Code{LVCreate}]{DVD/ruby/lvcreate.rb}
+
+\section{Logical Volume entfernen}
+Für das Entfernen eines Logical Volume wurde das Module LVRemove entwickelt. Das Module bietet die Funktion lv\_remove an.
+
+\lstset{language=Ruby, basicstyle=\footnotesize, showstringspaces=false, tabsize=2}
+\lstinputlisting[label=lst:ModuleLVRemove,caption=LVM-Engine: Module \Code{LVRemove}]{DVD/ruby/lvremove.rb}
+
+\section{Volume Group entfernen}
+Das Wrapper Module VGRemove entfernt eine Volume Group, wenn diese keine Logical Volume Objekte enthält.
+
+\lstset{language=Ruby, basicstyle=\footnotesize, showstringspaces=false, tabsize=2}
+\lstinputlisting[label=lst:ModuleVGRemove,caption=LVM-Engine: Module \Code{VGRemove}]{DVD/ruby/vgremove.rb}
+
+\section{Physical Volume entfernen}
+Das Wrapper Module PVRemove entfernt den Phyiscal Volume Label eines Physical Volume Objektes, wenn dieses keinem Volume Group zugeordnet ist. Die Zuordnung wird anhand des Attributes vg\_uuid geprüft.
+
+\lstset{language=Ruby, basicstyle=\footnotesize, showstringspaces=false, tabsize=2}
+\lstinputlisting[label=lst:ModulePVRemove,caption=LVM-Engine: Module \Code{PVRemove}]{DVD/ruby/pvremove.rb}
+
+\section{Volume Group erweitern}
+Das Wrapper Module VGExtents erweitert ein Volume Group Object, nach denselben Kriterien wie beim Erstellen einer Volume Group.
+
+\lstset{language=Ruby, basicstyle=\footnotesize, showstringspaces=false, tabsize=2}
+\lstinputlisting[label=lst:ModuleVGExtend,caption=LVM-Engine: Module \Code{VGExtend}]{DVD/ruby/vgextend.rb}
+
+
+\section{Logical Volume erweitern}
+Das Wrapper Module LVExtents erweitert ein Logical Volume Object, nach denselben Kriterien wie beim Erstellen eines Logical Volumes.
+
+\lstset{language=Ruby, basicstyle=\footnotesize, showstringspaces=false, tabsize=2}
+\lstinputlisting[label=lst:ModuleLVExtend,caption=LVM-Engine: Module \Code{LVExtend}]{DVD/ruby/lvextend.rb}
+
+\section{Quellcode}
+Das Projekt befindet sich auf der Social Coding Plattform "Github" 
+\url{https://github.com/lutsho/ruby-lvm-ssh}
+
+

@@ -1,0 +1,7 @@
+This is makeindex, version 2.15 [TeX Live 2009] (kpathsea + Thai support).
+Scanning style file ./Semesterarbeit.ist...........................done (27 attributes redefined, 0 ignored).
+Scanning input file Semesterarbeit.glo....done (30 entries accepted, 0 rejected).
+Sorting entries....done (155 comparisons).
+Generating output file Semesterarbeit.gls....done (47 lines written, 0 warnings).
+Output written in Semesterarbeit.gls.
+Transcript written in Semesterarbeit.glg.
